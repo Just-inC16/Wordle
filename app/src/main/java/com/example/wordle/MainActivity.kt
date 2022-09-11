@@ -11,7 +11,7 @@ import android.widget.*
 class MainActivity : AppCompatActivity() {
     object GlobalVariable{
         var wordToGuess=FourLetterWordList.getRandomFourLetterWord();
-        var totalGuess=4;
+        var totalGuess=3;
         var currGuessNum=1;
         var isWinner=false;
         var allWords=FourLetterWordList.getAllFourLetterWords();
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main);
 
         //Choose a random word
-        Log.v("*****The word chosen is", GlobalVariable.wordToGuess)
+        Log.v("**********************************The word chosen is", GlobalVariable.wordToGuess)
 
 
         //Guess button functionality
@@ -68,16 +68,17 @@ class MainActivity : AppCompatActivity() {
                 numGuessLeft.setText((GlobalVariable.totalGuess-GlobalVariable.currGuessNum).toString())
                 GlobalVariable.currGuessNum+=1
 
-                if(numGuessLeft.getText()=="0"){
-                    reset.setVisibility(View.VISIBLE)
 
-                    gameOverMsg.setText("You Lost! The word is "+GlobalVariable.wordToGuess)
-                    gameOverMsg.setVisibility(View.VISIBLE)
-                }
-                else if(GlobalVariable.isWinner){
+                if(GlobalVariable.isWinner){
                     reset.setVisibility(View.VISIBLE)
 
                     gameOverMsg.setText("You Won! The word is "+GlobalVariable.wordToGuess)
+                    gameOverMsg.setVisibility(View.VISIBLE)
+                }
+                else if(numGuessLeft.getText()=="0"){
+                    reset.setVisibility(View.VISIBLE)
+
+                    gameOverMsg.setText("You Lost! The word is "+GlobalVariable.wordToGuess)
                     gameOverMsg.setVisibility(View.VISIBLE)
                 }
 
@@ -87,7 +88,8 @@ class MainActivity : AppCompatActivity() {
         }
         reset.setOnClickListener(){
             GlobalVariable.wordToGuess=FourLetterWordList.getRandomFourLetterWord();
-            GlobalVariable.totalGuess=4;
+            Log.v("**********************************The word chosen is", GlobalVariable.wordToGuess)
+            GlobalVariable.totalGuess=3;
             GlobalVariable.currGuessNum=1;
             GlobalVariable.isWinner=false;
 
