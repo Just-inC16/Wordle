@@ -1,12 +1,20 @@
 package com.example.wordle
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.core.text.color
+import com.github.jinatonic.confetti.CommonConfetti
 
 class MainActivity : AppCompatActivity() {
     object GlobalVariable{
@@ -80,6 +88,8 @@ class MainActivity : AppCompatActivity() {
 
                     gameOverMsg.setText("You Lost! The word is "+GlobalVariable.wordToGuess)
                     gameOverMsg.setVisibility(View.VISIBLE)
+//                    CommonConfetti.rainingConfetti(container, new int[] { Color.BLACK })
+//                        .infinite();
                 }
 
 
@@ -124,6 +134,7 @@ class MainActivity : AppCompatActivity() {
                 result += "+"
             }
             else {
+//                val ch= guess[i]
                 result += "X"
             }
         }
@@ -131,7 +142,67 @@ class MainActivity : AppCompatActivity() {
         if(result == "OOOO"){
             GlobalVariable.isWinner=true
         }
+
         return result
+    }
+    fun convertSymbol(symbolRep:String,actualGuess:String): SpannableStringBuilder {
+        val s = SpannableStringBuilder(actualGuess)
+//        val s = SpannableString(actualGuess)
+//
+
+//            .append("First Part Not Bold ")
+//            .bold { append("BOLD") }
+//            .append("Rest not bold")
+//
+//        for (ch in symbolRep){
+//
+//        }
+//        for(i in actualGuess.indices){
+//            if(symbolRep[i].equals("O")){
+//                s.color(ForegroundColorSpan(Color.BLUE), { append(actualGuess[i]) })
+//            }
+//            else if(symbolRep[i].equals("+")){
+//                s.color(2, { append(actualGuess[i]) })
+//            }
+//            else{
+//                s.color(3, { append(actualGuess[i]) })
+//            }
+//        }
+        //Total Length
+        val size=symbolRep.length
+        //Define colors
+        val mRed = ForegroundColorSpan(Color.RED)
+        val mGreen = ForegroundColorSpan(Color.GREEN)
+        val mBlack = ForegroundColorSpan(Color.BLACK)
+        Log.v("Current symbols", s.toString())
+        var res=mRed
+        for(i in actualGuess.indices){
+            Log.v("The current iteration is", symbolRep[i].toString())
+            if(symbolRep[i].toString()=="O"){
+                Log.v("We are executing this green", "")
+                res=mGreen
+            }
+            else if(symbolRep[i].toString()=="+"){
+                Log.v("We are executing this red", "")
+//                s.append(actualGuess[i])
+////                s.setSpan(mRed, i,size, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+//                s.setSpan(mRed,i, i+1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                res=mRed
+            }
+            else{
+//                s.append(actualGuess[i])
+//                s.setSpan(mBlack, i, size, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                Log.v("We are executing this green","")
+//                s.setSpan(mBlack,i, i+1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                res=mBlack
+            }
+//            s.append(actualGuess[i])
+//                s.setSpan(mGreen,i, size, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            s.setSpan(res,i, i+1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        }
+//        s.setSpan(mGreen,0, size, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+//        s.append("Chicken").color(mRed)
+        return s
     }
     fun constructNewGuess(numGuess:Int,isGuess:Boolean, actualGuess:String){
         //Create a Horizontal layout
@@ -155,8 +226,16 @@ class MainActivity : AppCompatActivity() {
         val textView2 = TextView(this)
         if(isGuess)
             textView2.text=actualGuess
-        else
-            textView2.text=checkGuess(actualGuess)
+        else{
+//            Spannable sb = new SpannableString( finalString );
+//            sb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), finalString.indexOf(normalBOLD)+ normalBOLD.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); //bold
+//            sb.setSpan(new AbsoluteSizeSpan(intSize), finalString.indexOf(normalBOLD)+ normalBOLD.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);//resize size
+            val symbolRep=checkGuess(actualGuess)
+            val decipher =convertSymbol(symbolRep,actualGuess)
+            textView2.text=decipher
+        }
+
+
         textView2.setTextSize(TypedValue.COMPLEX_UNIT_SP,30.toFloat())
         textView2.setTextAlignment( View.TEXT_ALIGNMENT_VIEW_END)
 
